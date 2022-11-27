@@ -27,8 +27,26 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public User show(Long id) {
+        return users.stream().filter(user -> user.getId() == id).findAny().orElse(null);
+    }
+
+    @Override
     public void save(User user) {
         user.setId(COUNT++);
         users.add(user);
+    }
+
+    @Override
+    public void update(Long id, User updatedUser) {
+        User userToBeUpdated = show(id);
+        userToBeUpdated.setName(updatedUser.getName());
+        userToBeUpdated.setLastName(updatedUser.getLastName());
+        userToBeUpdated.setAge(updatedUser.getAge());
+    }
+
+    @Override
+    public void delete(Long id) {
+        users.removeIf(user -> user.getId() == id);
     }
 }
