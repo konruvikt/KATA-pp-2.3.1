@@ -6,6 +6,24 @@
     <title>Users</title>
 </head>
 <body>
-    <span>Here will be users</span>
+    <table>
+        <thead>
+        <tr>
+            <th>Users</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getName()}"></td>
+            <td th:text="${user.getLastName()}"></td>
+            <td th:text="${user.getAge()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+
+    <a href="/new">Add user</a>
 </body>
 </html>
