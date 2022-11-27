@@ -2,9 +2,12 @@ package web.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import web.dao.UserDAOImpl;
 import web.models.User;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
@@ -34,7 +37,9 @@ public class UserController {
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user") User user) {
+    public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "users/new";
         userdao.save(user);
         return "redirect:/users";
     }
@@ -46,7 +51,11 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
+    public String update(@ModelAttribute("user") @Valid User user,
+                         BindingResult bindingResult,
+                         @PathVariable("id") Long id) {
+        if (bindingResult.hasErrors())
+            return "users/edit";
         userdao.update(id, user);
         return "redirect:/users";
     }
