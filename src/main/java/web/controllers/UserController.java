@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import web.dao.UserDAOImpl;
 import web.models.User;
+import web.service.UserService;
 
 import javax.validation.Valid;
 
@@ -13,21 +13,21 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserDAOImpl userdao;
+    private final UserService userService;
 
-    public UserController(UserDAOImpl userdao) {
-        this.userdao = userdao;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("users", userdao.index());
+        model.addAttribute("users", userService.index());
         return "users/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userdao.show(id));
+        model.addAttribute("user", userService.show(id));
         return "users/show";
     }
 
@@ -40,13 +40,13 @@ public class UserController {
     public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "users/new";
-        userdao.save(user);
+        userService.save(user);
         return "redirect:/users";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userdao.show(id));
+        model.addAttribute("user", userService.show(id));
         return "users/edit";
     }
 
@@ -56,13 +56,13 @@ public class UserController {
                          @PathVariable("id") Long id) {
         if (bindingResult.hasErrors())
             return "users/edit";
-        userdao.update(id, user);
+        userService.update(id, user);
         return "redirect:/users";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Long id) {
-        userdao.delete(id);
+        userService.delete(id);
         return "redirect:/users";
     }
 }
